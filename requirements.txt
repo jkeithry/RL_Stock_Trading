@@ -1,0 +1,14 @@
+git+https://github.com/AI4Finance-LLC/FinRL-Library.git@master#egg=finrl
+pandas~=1.2.3
+numpy~=1.20.2
+matplotlib~=3.4.1
+yfinance~=0.1.59
+stockstats~=0.3.2
+gym~=0.18.0
+stable_baselines3
+sklearn~=0.0
+PyQt5
+
+
+future~=0.18.2
+scikit-learn~=0.24.1
