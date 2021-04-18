@@ -28,7 +28,7 @@ n_actions = env_train.action_space.shape[-1]
 action_noise = NormalActionNoise(mean=np.zeros(n_actions), sigma=0.1 * np.ones(n_actions))
 
 # model settings
-model_ddpg = DDPG(policy='MlpPolicy',
+model_sac = SAC(policy='MlpPolicy',
                    env=env_train,
                    action_noise=action_noise,
                    verbose=0,
@@ -37,7 +37,7 @@ model_ddpg = DDPG(policy='MlpPolicy',
                    learning_rate=0.001
                    )
 
-trained = model_ddpg.learn(total_timesteps=10000, log_interval=10)
+trained = model_sac.learn(total_timesteps=10000, log_interval=10)
 # model_ddpg.save("ddpg_stockenvtrain")
 ssrl.test_model(trained, test_data, 15000)
 

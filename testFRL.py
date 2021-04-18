@@ -3,9 +3,14 @@ import pandas as pd
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
+from matplotlib.collections import LineCollection
+from matplotlib.colors import ListedColormap, BoundaryNorm
+from matplotlib.lines import Line2D
+import PyQt5
 from sklearn import preprocessing
+import tkinter
 
-matplotlib.use("Agg")
+matplotlib.use("Qt5Agg")
 import datetime
 
 from finrl.config import config
@@ -14,8 +19,9 @@ from finrl.preprocessing.preprocessors import FeatureEngineer
 from finrl.preprocessing.data import data_split
 from finrl.env.env_stocktrading import StockTradingEnv
 from finrl.model.models import DRLAgent
-# from finrl.trade.backtest import BackTestStats
+from finrl.trade.backtest import backtest_stats, get_baseline, backtest_plot
 from stable_baselines3 import SAC
+from stable_baselines3 import DDPG
 
 
 def train_one():
@@ -60,7 +66,6 @@ def train_one():
         "action_space": stock_dimension, 
         "reward_scaling": 1e-4
         }
-
     e_train_gym = StockTradingEnv(df=train, **env_kwargs)
     e_trade_gym = StockTradingEnv(df=trade, turbulence_threshold=250, **env_kwargs)
     env_train, _ = e_train_gym.get_sb_env()
@@ -70,22 +75,64 @@ def train_one():
 
     print("==============Model Training===========")
     now = datetime.datetime.now().strftime("%Y%m%d-%Hh%M")
-
-    model_sac = agent.get_model("sac")
-    trained_sac = agent.train_model(
-        model=model_sac, tb_log_name="sac", total_timesteps=80000
-    )
-    # trained_sac.save("sac_80k_frl")
-    # trained_sac = SAC.load('sac_80k_frl_keep')
+    user_input = input('train model? 1 train 0 don\'t train')
+    if user_input == 1:
+        model_sac = agent.get_model("sac")
+        trained_sac = agent.train_model(
+            model=model_sac, tb_log_name="sac", total_timesteps=8000
+        )
+        trained_sac.save("sac_8k"+df.tic[0]+"_frl")
+    else:
+        trained_sac = SAC.load('sac_80k_msft_working')
     print("==============Start Trading===========")
     df_account_value, df_actions = DRLAgent.DRL_prediction(trained_sac, e_trade_gym)
     df_account_value.to_csv(
-        "./" + config.RESULTS_DIR + "/df_account_value_" + now + ".csv"
+        "./" + config.RESULTS_DIR + "/SAC_df_account_value_"+ df.tic[0] + "_" + now + ".csv"
     )
-    df_actions.to_csv("./" + config.RESULTS_DIR + "/df_actions_" + now + ".csv")
+    df_actions.to_csv("./" + config.RESULTS_DIR + "/SAC_df_actions_" + df.tic[0] + "_" + now + ".csv")
 
     # print("==============Get Backtest Results===========")
-    # perf_stats_all = BackTestStats(df_account_value)
-    # perf_stats_all = pd.DataFrame(perf_stats_all)
-    # perf_stats_all.to_csv("./" + config.RESULTS_DIR + "/perf_stats_all_" + now + ".csv")
+    perf_stats_all = backtest_stats(df_account_value)
+    perf_stats_all = pd.DataFrame(perf_stats_all)
+    perf_stats_all.to_csv("./" + config.RESULTS_DIR + "/SAC_perf_stats_all_" + df.tic[0] + "_" + now + ".csv")
+
+    #plot acc value
+    actions = df_actions['actions']
+    x = np.linspace(1, df_account_value['account_value'].shape[0], df_account_value['account_value'].shape[0])
+    y = df_account_value['account_value']
+
+
+    points = np.array([x, y]).T.reshape(-1, 1, 2)
+    segments = np.concatenate([points[:-1], points[1:]], axis=1)
+
+    fig, axs = plt.subplots(1, 1, sharex=True, sharey=True)
+
+    # plt.plot(x, y)
+    plt.xlabel('Trading Day (' + 'From ' + config.START_TRADE_DATE + " to " + config.END_DATE + ')')
+    plt.ylabel('Account Value (10000 of USD)')
+    plt.title("Trading Test on " + df.tic[0])
+
+    # Use a boundary norm instead
+    cmap = ListedColormap(['r', 'g', 'b'])
+    norm = BoundaryNorm([-100, -0.1, 0.1, 100], cmap.N)
+    lc = LineCollection(segments, cmap=cmap, norm=norm)
+    lc.set_array(actions)
+    lc.set_linewidth(2)
+    line = axs.add_collection(lc)
+    # fig.colorbar(line, ax=axs)
+
+    axs.set_xlim(x.min(), x.max())
+    axs.set_ylim(y.min(), y.max())
+
+
+    custom_lines = [Line2D([0], [0], color=cmap(0.), lw=4),
+                    Line2D([0], [0], color=cmap(.5), lw=4),
+                    Line2D([0], [0], color=cmap(1.), lw=4)]
+
+
+    # lines = ax.plot(data)
+    axs.legend(custom_lines, ['Sell', 'Hold', 'Buy'])
+
+
+    plt.savefig("./"+ config.RESULTS_DIR + "/plots/" "SAC_plot_" + df.tic[0] + "_" + now + ".png")
 train_one()
