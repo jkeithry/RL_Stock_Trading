@@ -21,6 +21,6 @@ To setup up environment follow the steps below:
 	
 ===============
 
-Once the venv has been set up, experiments can be run by changing the stock ticket on line 33 of code/main.py
+Once the venv has been set up, experiments can be run by changing the stock ticker on line 33 of code/main.py
 
 Or models can be trained by adjusting the parameters starting at line 78 of code/main.py
