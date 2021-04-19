@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Reinforcement Learning Stock Trading Project
 ## CPS824
 ## Winter 2021
@@ -6,6 +7,16 @@
 ### Ian MacPherson
 ### Bretton Tan
 ### Paul Messina
+=======
+#Reinforcement Learning Stock Trading Project
+##CPS824
+##Winter 2021
+## Group 8:
+###Jeff Keith
+###Ian MacPherson
+###Bretton Tan
+###Paul Messina
+>>>>>>> f48d28f03c1df4558324cba5c043666ae06f71d9
 
 Please See our final report: Final Report - CPS824 Group 8.pdf
 
