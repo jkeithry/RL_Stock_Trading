@@ -1,5 +1,14 @@
-# RL_Stock_Trading
-CPS824 Reinforcement Learning Stock Trading Project
+#Reinforcement Learning Stock Trading Project
+##CPS824
+##Winter 2021
+## Group 8:
+###Jeff Keith
+###Ian MacPherson
+###Bretton Tan
+###Paul Messina
+
+Please See our final report: Final Report - CPS824 Group 8.pdf
+
 
 To setup up environment follow the steps below:
 
