@@ -7,7 +7,7 @@
 
 ## Setup:
 
-Please See our final report: Final Report - CPS824 Group 8.pdf
+Please See our final report: Final Report - CPS824 Group 8.pdf and code/main.py.
 
 To setup up environment follow the steps below:
 
@@ -21,6 +21,6 @@ To setup up environment follow the steps below:
 	
 ===============
 
-Once the venv has been set up, experiments can be run by changing the stock ticket on line 33 of main.py
+Once the venv has been set up, experiments can be run by changing the stock ticket on line 33 of code/main.py
 
-Or models can be trained by adjusting the parameters starting at line 78 of main.py
+Or models can be trained by adjusting the parameters starting at line 78 of code/main.py
