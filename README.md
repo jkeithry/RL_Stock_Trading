@@ -1,9 +1,12 @@
 # Reinforcement Learning Stock Trading Project
-#### CPS 824 Group 8:
-###### Jeff Keith
-###### Ian MacPherson
-###### Bretton Tan
-###### Paul Messina
+
+Forked AI4Finance-LLC\FinRL to make and ensemble bot that trades stockes to learn more about reinforcement learning algorithms.
+
+
+ Jeff Keith
+ Ian MacPherson
+ Bretton Tan
+ Paul Messina
 
 ## Setup:
 
